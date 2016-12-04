@@ -22,5 +22,5 @@ public class WikiWeightNameTest extends FrameworkBase{
 		resultPage.getElementCount();
 		resultPage.printAllElementsWeightAndName();
 	}
-
+ // test
 }
