@@ -58,6 +58,7 @@ public class DriverManager {
 
 		case "chrome":
 			message = "Chrome driver requested";
+			System.setProperty("webdriver.chrome.driver", "/Users/jhoon/Library/tools/chromedriver");
 			driver = new ChromeDriver();
 			break;
 
