@@ -1,6 +1,5 @@
 log4j-application.log
 target/classes/framework/FrameworkBase.class
-target/test-classes/wikitest/WikiWeightNameTest.class
 .classpath
 .project
 .settings/org.eclipse.jdt.core.prefs
