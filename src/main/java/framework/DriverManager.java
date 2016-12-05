@@ -3,7 +3,11 @@ package framework;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
 import util.PropertiesLoader;
 
 public class DriverManager {
@@ -45,7 +49,6 @@ public class DriverManager {
 		WebDriver driver;
 		PropertiesLoader props = new PropertiesLoader();
 		String browser = props.getProperty("browser");
-		String chromeDriverPath = props.getProperty("webdriver.chrome.driver");
 
 		LOGGER.info("Starting driver...");
 		
@@ -54,13 +57,25 @@ public class DriverManager {
 		switch (browser) {
 		case "firefox":
 			message = "Firefox driver requested";
-			driver = new FirefoxDriver();
+			
+			FirefoxProfile firefoxProfile = new FirefoxProfile();
+			firefoxProfile.setPreference("browser.privatebrowsing.autostart", true);
+			
+			driver = new FirefoxDriver(firefoxProfile);
 			break;
 
 		case "chrome":
 			message = "Chrome driver requested";
+			String chromeDriverPath = props.getProperty("webdriver.chrome.driver");
 			System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-			driver = new ChromeDriver();
+			
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("-incognito");
+			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			
+			driver = new ChromeDriver(capabilities);
+			
 			break;
 
 		default:
