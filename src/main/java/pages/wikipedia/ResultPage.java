@@ -1,14 +1,14 @@
 package pages.wikipedia;
 
 import static org.junit.Assert.*;
+
 import java.util.List;
 import org.junit.Assert;
-import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import page.AbstractPage;
-import util.TestUtil;
 
 public class ResultPage extends AbstractPage {
 
@@ -44,8 +44,8 @@ public class ResultPage extends AbstractPage {
 
 	public void printAllElementsWeightAndName() {
 		By allElementsLocator = new By.ByXPath("//*[@id=\"collapsibleTable0\"]/tbody/tr/td/span");
-		By automicWeightLocator = new By.ByXPath("./a/span/span[2]");
-		By automicNameLocator = new By.ByXPath("./a/span/span[1]");
+		By atomicWeightLocator = new By.ByXPath("./a/span/span[2]");
+		By atomicNameLocator = new By.ByXPath("./a/span/span[1]");
 
 		List<WebElement> elementList = driver.findElements(allElementsLocator);
 
@@ -55,27 +55,25 @@ public class ResultPage extends AbstractPage {
 
 		for(int i=0; i < elementList.size(); i++) {
 			WebElement currentElement = elementList.get(i);
-			WebElement currElementName = currentElement.findElement(automicNameLocator);
-			WebElement curreElementWeight = currentElement.findElement(automicWeightLocator);
+			WebElement currElementName = currentElement.findElement(atomicNameLocator);
+			WebElement curreElementWeight = currentElement.findElement(atomicWeightLocator);
 
-			String automicName = currElementName.getText();
-			String automicWeight = curreElementWeight.getText();
-			LOGGER.debug("Element # " + (i+1));			
-			LOGGER.info(automicWeight + "-" + removeSpecialChar(automicName));
+			LOGGER.debug("Element # " + (i+1));
+			LOGGER.info(formatter(currElementName.getText(), curreElementWeight.getText()));
 			LOGGER.debug(elementHorizontalLogSpacer);
 		}
 	}
 
 	public int getSumOfElements() {
 		int sum = 0;
-		By automicWeightLocator = new By.ByXPath("//*[@id=\"collapsibleTable0\"]/tbody/tr/td/span/a/span/span[2]");
-		List<WebElement> elementList = driver.findElements(automicWeightLocator);
+		By atomicWeightLocator = new By.ByXPath("//*[@id=\"collapsibleTable0\"]/tbody/tr/td/span/a/span/span[2]");
+		List<WebElement> elementList = driver.findElements(atomicWeightLocator);
 
 		for(int i=0; i < elementList.size(); i++) {
 			WebElement currentElement = elementList.get(i);
-			String automicWeight = currentElement.getText();
-			if(automicWeight!=null){
-				sum += Integer.parseInt(automicWeight);
+			String weight = currentElement.getText();
+			if(weight!=null){
+				sum += Integer.parseInt(weight);
 			}
 		}
 		LOGGER.info("Sum of Elements : " + sum);
@@ -83,16 +81,16 @@ public class ResultPage extends AbstractPage {
 	}
 
 	public String findElementName(int weight) {
-		By automicWeightLocator = new By.ByXPath("//*[@id=\"collapsibleTable0\"]/tbody/tr/td/span/a/span/span[2]");
-		By automicNameLocator = new By.ByXPath("../span[1]");
-		List<WebElement> elementList = driver.findElements(automicWeightLocator);
+		By atomicWeightLocator = new By.ByXPath("//*[@id=\"collapsibleTable0\"]/tbody/tr/td/span/a/span/span[2]");
+		By atomicNameLocator = new By.ByXPath("../span[1]");
+		List<WebElement> elementList = driver.findElements(atomicWeightLocator);
 
 		for(int i=0; i < elementList.size(); i++) {
 			WebElement currentElement = elementList.get(i);
-			String automicWeight = currentElement.getText();
-			if(automicWeight!=null){
-				if(Integer.parseInt(automicWeight)==weight){
-					WebElement nameElement = currentElement.findElement(automicNameLocator);
+			String atomicWeight = currentElement.getText();
+			if(atomicWeight!=null){
+				if(Integer.parseInt(atomicWeight)==weight){
+					WebElement nameElement = currentElement.findElement(atomicNameLocator);
 					LOGGER.info("Name of the element with the weight of [" + weight + "] is '" + removeSpecialChar(nameElement.getText()) + "' ");
 					return removeSpecialChar(nameElement.getText());
 				}
@@ -112,4 +110,54 @@ public class ResultPage extends AbstractPage {
 		return buf.toString();
 	}
 
+	public void printElementRow() {
+		By allRowsInTable = new By.ByXPath("//*[@id=\"collapsibleTable0\"]/tbody/tr");
+		By elementsInRow = new By.ByXPath("./td/span/a/span");
+
+		List<WebElement> rows = driver.findElements(allRowsInTable);
+
+		if(rows != null) {
+			LOGGER.info(rows.size());
+			final String elementHorizontalLogSpacer = "========================================";
+			int cnt = 1;
+			for(int i=0; cnt <= 7; i++) {
+				WebElement currentElement = rows.get(i);
+
+				try {
+					List<WebElement> automicInRow = currentElement.findElements(elementsInRow);
+					
+					if(automicInRow.isEmpty()) {
+						continue;
+					}
+
+					LOGGER.info(elementHorizontalLogSpacer);
+					LOGGER.info("   ROW " + (cnt));
+					LOGGER.info(elementHorizontalLogSpacer);
+
+					printAtomicInfo(automicInRow);
+
+					cnt++;
+				} catch(NoSuchElementException exception) {
+					LOGGER.info("NoSuchElementException");
+				}
+			}
+		}
+	}
+
+	private void printAtomicInfo(List<WebElement> atomics) {
+		for(int i=0; i < atomics.size(); i++) {
+			WebElement currentElement = atomics.get(i);
+			WebElement currElementName = currentElement.findElement(new By.ByXPath("./span[1]"));
+			WebElement curreElementWeight = currentElement.findElement(new By.ByXPath("./span[2]"));
+
+			String name = currElementName.getText();
+			String weight = curreElementWeight.getText();
+
+			LOGGER.info(formatter(name, weight));
+		}
+	}
+	
+	private String formatter(String name, String weight) {
+		return String.format(" %1$s - %2$s ", weight, removeSpecialChar(name));
+	}
 }

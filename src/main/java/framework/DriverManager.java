@@ -45,6 +45,7 @@ public class DriverManager {
 		WebDriver driver;
 		PropertiesLoader props = new PropertiesLoader();
 		String browser = props.getProperty("browser");
+		String chromeDriverPath = props.getProperty("webdriver.chrome.driver");
 
 		LOGGER.info("Starting driver...");
 		
@@ -58,7 +59,7 @@ public class DriverManager {
 
 		case "chrome":
 			message = "Chrome driver requested";
-			System.setProperty("webdriver.chrome.driver", "/Users/jhoon/Library/tools/chromedriver");
+			System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 			driver = new ChromeDriver();
 			break;
 

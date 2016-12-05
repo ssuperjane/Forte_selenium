@@ -29,7 +29,7 @@ public class WikiWeightNameTest extends FrameworkBase{
 
 
 	@Test
-	public void wikiTestNumber2() {
+	public void wikiTestNo2() {
 		String searchTerm = "Periodic Table";
 		
 		int weight = props.getPropertyAsInt("test2.atomic.weight");
@@ -42,5 +42,17 @@ public class WikiWeightNameTest extends FrameworkBase{
 		
 		assertTrue("The sum of elements is 7021.",resultPage.getSumOfElements()==7021);
 		assertTrue("The name of the element with atomic weight of '" + weight +"'", name.equals(resultPage.findElementName(weight)));
+	}
+
+	@Test
+	public void wikiTestNo3() {
+		String searchTerm = "Periodic Table";
+		
+		WikiFrontPage frontPage = new WikiFrontPage();
+		frontPage.openPage();
+		frontPage.searchPeriodicTable(searchTerm);
+		ResultPage resultPage = frontPage.clickSearchButton();
+		
+		resultPage.printElementRow();
 	}
 }
