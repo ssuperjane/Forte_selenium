@@ -59,7 +59,7 @@ public class DriverManager {
 			message = "Firefox driver requested";
 			
 			FirefoxProfile firefoxProfile = new FirefoxProfile();
-			firefoxProfile.setPreference("browser.privatebrowsing.autostart", true);
+			firefoxProfile.setPreference("browser.private.browsing.autostart", true);
 			
 			driver = new FirefoxDriver(firefoxProfile);
 			break;

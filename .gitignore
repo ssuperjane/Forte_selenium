@@ -7,3 +7,4 @@ target/classes/framework/FrameworkBase.class
 target/classes/META-INF/MANIFEST.MF
 target/classes/META-INF/maven/com.forteknowledge/SeleniumFinal/pom.properties
 target/classes/META-INF/maven/com.forteknowledge/SeleniumFinal/pom.xml
+/target/
